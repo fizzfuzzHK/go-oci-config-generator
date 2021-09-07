@@ -17,6 +17,10 @@ type Config struct {
 	region      string
 }
 
+// Enter a location for your config [/home/isucon/.oci/config]:
+// Enter a user OCID:
+// Error: Invalid OCID format. Instructions to find OCIDs: https://docs.cloud.oracle.com/Content/API/Concepts/apisigningkey.htm#Other
+
 const (
 	userValidation    = "ocid1.user.oc1.."
 	tenancyValidation = "ocid1.tenancy.oc1.."
@@ -72,7 +76,7 @@ func checkConfigExists(dir string, s *bufio.Scanner) (filePath string, err error
 	return
 }
 
-func scanField(s *bufio.Scanner, c *string, message string, validation string) {
+func scanField(s *bufio.Scanner, c *string, message string, validation string, errorMessage string) {
 	fmt.Print(message)
 	for {
 		s.Scan()
@@ -81,21 +85,21 @@ func scanField(s *bufio.Scanner, c *string, message string, validation string) {
 			*c = input
 			break
 		}
-		fmt.Print("Please Enter Appropriate Value!! : ")
+		fmt.Print(errorMessage)
 	}
 }
 
 func runScanner(s *bufio.Scanner, c *Config) {
 	if !isNewConfig {
-		scanField(s, &c.profile, "enter profile name : ", "")
+		scanField(s, &c.profile, "enter profile name : ", "", "")
 	} else {
 		c.profile = "DEFAULT"
 	}
-	scanField(s, &c.user, "enter user OCID : ", userValidation)
-	scanField(s, &c.fingerprint, "enter fingerprint : ", "")
-	scanField(s, &c.key_file, "enter path to private_key : ", "")
-	scanField(s, &c.tenancy, "enter tenancy OCID : ", tenancyValidation)
-	scanField(s, &c.region, "enter region : ", regionValidation)
+	scanField(s, &c.user, "Enter a user OCID: ", userValidation, "Error: Invalid OCID format. ")
+	scanField(s, &c.fingerprint, "Enter a Fingerprint: ", "", "")
+	scanField(s, &c.key_file, "Enter a directory path to Private key: ", "", "")
+	scanField(s, &c.tenancy, "Enter a tenancy OCID: ", tenancyValidation, "Error: Invalid OCID format. ")
+	scanField(s, &c.region, "Enter a region  ", regionValidation, "")
 }
 
 func createNewConfig(filePath string, c *Config) error {
@@ -118,6 +122,7 @@ func createNewConfig(filePath string, c *Config) error {
 		err = fmt.Errorf("can not write to config file due to: %s", err.Error())
 		return err
 	}
+	fmt.Println("Config written to %s", filePath)
 	defer f.Close()
 	return nil
 }
@@ -142,6 +147,7 @@ func addNewProfile(filePath string, c *Config) error {
 		err = fmt.Errorf("can not write to config file due to: %s", err.Error())
 		return err
 	}
+	fmt.Println("Config written to %s", filePath)
 	defer f.Close()
 	return nil
 }
