@@ -1,0 +1,1 @@
+# go-oci-config-generator
