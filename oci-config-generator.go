@@ -50,19 +50,12 @@ func confirmAddProfile(s *bufio.Scanner) {
 	}
 }
 
-func checkConfigExists(homeDir string, s *bufio.Scanner) (configExists bool, filePath string, err error) {
+func checkConfigExists(homeDir string, s *bufio.Scanner) (configExists bool, filePath string) {
 	filePath = homeDir + "/.oci/config"
 	if f, err := os.Stat(filePath); os.IsNotExist(err) || f.IsDir() {
 		configExists = false
-		return configExists, filePath, nil
 	} else if err == nil {
 		configExists = true
-		return configExists, filePath, nil
-	} else {
-		if err != nil {
-			err = fmt.Errorf("can not create Configuration file due to: %s", err.Error())
-			return false, "", err
-		}
 	}
 	return
 }
