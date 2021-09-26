@@ -22,7 +22,7 @@ const (
 	tenancyValidation = "ocid1.tenancy.oc1.."
 )
 
-func GetHomeDir() (result string, err error) {
+func getHomeDir() (result string, err error) {
 	u, err := user.Current()
 	if err != nil {
 		err = fmt.Errorf("can not get HomeDirectory due to: %s", err.Error())
@@ -142,7 +142,7 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	config := &Config{}
 
-	homeDir, err := GetHomeDir()
+	homeDir, err := getHomeDir()
 	if err != nil {
 		panic(err)
 	}
