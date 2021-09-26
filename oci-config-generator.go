@@ -44,7 +44,7 @@ func confirmAddProfile(s *bufio.Scanner) {
 			fmt.Println("bye")
 			os.Exit(0)
 		default:
-			fmt.Println("what?")
+			fmt.Println("please enter Y or n")
 			continue
 		}
 	}
@@ -52,12 +52,10 @@ func confirmAddProfile(s *bufio.Scanner) {
 
 func checkConfigExists(homeDir string, s *bufio.Scanner) (configExists bool, filePath string, err error) {
 	filePath = homeDir + "/.oci/config"
-	fmt.Println(filePath)
 	if f, err := os.Stat(filePath); os.IsNotExist(err) || f.IsDir() {
 		configExists = false
 		return configExists, filePath, nil
 	} else if err == nil {
-		fmt.Println("configExists")
 		configExists = true
 		return configExists, filePath, nil
 	} else {
@@ -80,7 +78,6 @@ func scanField(s *bufio.Scanner, c *string, message string, validation string, e
 		}
 		fmt.Println(errorMessage)
 		fmt.Print(message)
-
 	}
 }
 
@@ -105,7 +102,6 @@ func configToByte(config *Config) []byte {
 }
 
 func createNewConfig(byteData []byte, filePath string, c *Config) error {
-
 	f, err := os.Create(filePath)
 	if err != nil {
 		err = fmt.Errorf("can not open config file due to: %s", err.Error())
@@ -122,7 +118,6 @@ func createNewConfig(byteData []byte, filePath string, c *Config) error {
 }
 
 func addNewProfile(byteData []byte, filePath string, c *Config) error {
-
 	f, err := os.OpenFile(filePath, os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		err = fmt.Errorf("can not write to config file due to: %s", err.Error())
